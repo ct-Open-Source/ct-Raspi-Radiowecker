@@ -13,7 +13,7 @@ sudo apt update && sudo apt upgrade
 sudo apt install --no-install-recommends xserver-xorg xinit xterm xserver-xorg-input-evdev xserver-xorg-video-fbturbo lightdm gstreamer1.0-alsa python3-pip python3-pygame python3-venv python3-wheel python-pip python-alsaaudio mopidy mopidy-tunein mopidy-podcast-itunes 
 ```
 
-## Displayeinrichtuhg
+## Displayeinrichtung
 
 ```
 wget https://github.com/waveshare/LCD-show/archive/master.zip
@@ -38,5 +38,11 @@ python3 -m venv ~/venv
 
 source ~/venv/bin/activate
 
-pip install -r requirements.txt
+pip install -r ~/alarm/requirements.txt
+```
+
+## Shell-Skript ausführbar machen
+
+```
+chmod +x ~/alarm/run.sh
 ```
