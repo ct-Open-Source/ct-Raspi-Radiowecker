@@ -10,7 +10,7 @@ sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/buste
 
 sudo apt update && sudo apt upgrade
 
-sudo apt install --no-install-recommends xserver-xorg xinit xterm xserver-xorg-input-evdev xserver-xorg-video-fbturbo lightdm gstreamer1.0-alsa python3-pip python3-pygame python3-venv python3-wheel python-pip python-alsaaudio mopidy mopidy-tunein mopidy-podcast-itunes 
+sudo apt install --no-install-recommends xserver-xorg xinit xterm xserver-xorg-input-evdev xserver-xorg-video-fbturbo lightdm gstreamer1.0-alsa python3-pip python3-pygame python3-venv python3-wheel python-pip python-setuptools python-wheel python-alsaaudio mopidy mopidy-tunein mopidy-podcast-itunes 
 ```
 
 ## Displayeinrichtung
