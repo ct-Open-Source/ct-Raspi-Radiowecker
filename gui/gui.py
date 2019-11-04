@@ -19,7 +19,7 @@ class Gui:
         pygame.init()
         pygame.mixer.quit()
         # a fullscreen switch for debugging purposes
-        self.fullscreen = False
+        self.fullscreen = True 
         # the display resolution as a tuple
         self.display_size = (int(display_resolution.split(
             ',')[0]), int(display_resolution.split(',')[0]))
