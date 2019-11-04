@@ -46,7 +46,7 @@ class application:
 
     def check_idle(self):
         while True:
-            if time.time() - self.time_last_idle > 300:
+            if time.time() - self.time_last_idle > 30:
                 self.time_last_idle = time.time()
                 self.is_idle = True
             time.sleep(1)
@@ -311,6 +311,11 @@ class application:
             self.ui.elements.append(self.player_widget_cache[volume_icon])
 
     def switch_to_defaultscreen(self, reset=False):
+        if self.alarm.alarm_active:
+            self.is_idle = False
+            self.current_screen = self.alarmscreen
+            return
+
         if self.is_idle and self.current_screen != self.musicscreen and self.current_screen != self.alarmscreen:
             self.ui.redraw = True
             self.current_screen = self.idlescreen
