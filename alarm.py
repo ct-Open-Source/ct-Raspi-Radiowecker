@@ -20,7 +20,7 @@ class Alarm(object):
             new_time = int(datetime.now().minute)
             if new_time != self.old_time:
                 self.old_time = new_time
-                if self.alarmtime.hour == datetime.now().hour and self.alarmtime.minute == datetime.now().minute:
+                if self.enabled is True and self.alarmtime.hour == datetime.now().hour and self.alarmtime.minute == datetime.now().minute:
                     self.alarm_active = True
             time.sleep(1)
 
@@ -32,3 +32,9 @@ class Alarm(object):
 
     def changeAlarm(self, m):
         self.time += timedelta(minutes=m)
+
+    def enableAlarm(self):
+        self.enabled = True
+
+    def disableAlarm(self):
+        self.enabled = False
