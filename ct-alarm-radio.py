@@ -153,12 +153,12 @@ class application:
             (0, -55), self.alarmscreen_cache["alarm_disabled_button"].Surface, "center", "center")
 
         self.alarmscreen_cache["alarm_edit_enabled_button"] = gui.Button(
-            self.ui.image_cache["alarm-edit-enabled.png"], icon_size_enable, self.enable_alarm)
+            self.ui.image_cache["alarm-edit-enabled.png"], icon_size_enable, self.disable_alarm)
         self.alarmscreen_cache["alarm_edit_enabled_button"].Position = self.ui.calculate_position(
             (0, 0), self.alarmscreen_cache["alarm_edit_enabled_button"].Surface, "top", "center")
 
         self.alarmscreen_cache["alarm_edit_disabled_button"] = gui.Button(
-            self.ui.image_cache["alarm-edit-disabled.png"], icon_size_enable, self.disable_alarm)
+            self.ui.image_cache["alarm-edit-disabled.png"], icon_size_enable, self.enable_alarm)
         self.alarmscreen_cache["alarm_edit_disabled_button"].Position = self.ui.calculate_position(
             (0, 0), self.alarmscreen_cache["alarm_edit_disabled_button"].Surface, "top", "center")
 
@@ -550,6 +550,8 @@ class application:
 
     def disable_alarm(self):
         self.alarm.disableAlarm()
+        self.alarm.alarm_active = False
+        self.player_primed = False
         self.current_screen = self.clockscreen
         self.alarm.turnOffSnooze()
         self.config.setting["enabled"] = "0"
