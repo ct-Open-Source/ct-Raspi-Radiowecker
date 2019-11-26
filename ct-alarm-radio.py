@@ -30,6 +30,10 @@ class application:
         self.musicplayer = MusicPlayer(self.config.setting["mopidy_host"])
         self.alarm = Alarm(self.config.setting["alarmtime"])
         self.alarm.alarm_active = False
+        if self.config.setting["enabled"] == "1":
+            self.alarm.enableAlarm()
+        else:
+            self.alarm.disableAlarm()
         self.player_primed = False
 
         self.is_idle = False
@@ -172,6 +176,8 @@ class application:
             self.alarmscreen_cache["alarm_button"].Position[0] + icon_size[1]*1.2, self.alarmscreen_cache["alarm_button"].Position[1])
 
     def alarmscreen(self):
+        self.enable_alarm()
+
         if not hasattr(self, 'alarmscreen_cache'):
             self.cache_alarmscreen()
 
@@ -530,14 +536,17 @@ class application:
         self.ui.redraw = True
 
     def disable_alarm(self):
-        self.alarm.alarm_active = False
-        self.alarm.enabled = False
+        self.alarm.disableAlarm()
         self.current_screen = self.clockscreen
+        self.config.setting["enabled"] = "0"
+        self.config.save()
         self.ui.redraw = True
 
     def enable_alarm(self):
-        self.alarm.enabled = True
+        self.alarm.enableAlarm()
         self.current_screen = self.clockscreen
+        self.config.setting["enabled"] = "1"
+        self.config.save()
         self.ui.redraw = True
 
     def alarm_triggered(self):
