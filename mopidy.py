@@ -25,12 +25,17 @@ class MusicPlayer(object):
     old_trackimages = None
     old_trackinfo = None
 
-    def __init__(self, hostname="127.0.0.1", port="6680", password=""):
+    def __init__(self, hostname="127.0.0.1", port="6680", password="", shuffle=False):
         self.url = "http://"+hostname+":"+port+"/mopidy/rpc"
+        if shuffle == "1":
+            self.shuffle = True
+        else:
+            self.shuffle = False
         # print(self.checkAlarmPlaylist())
         self.update_thread = threading.Thread(target=self.updateStatus)
         self.update_thread.daemon = True
         self.update_thread.start()
+
 
     def _downloader(self):
         if self._imageurl != None and self._imageurl not in self.image_cache:
