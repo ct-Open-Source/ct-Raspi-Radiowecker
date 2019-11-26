@@ -7,7 +7,6 @@ import locale
 from config import config
 from mopidy import MusicPlayer
 from alarm import Alarm
-from subprocess import call
 from datetime import datetime
 import time
 import threading
@@ -23,12 +22,12 @@ class application:
             self.config.setting["fg_color"],
             self.config.setting["bg_color"],
             self.config.setting["show_mouse_cursor"],
-            quit_function=self.cleanup
+            quit_function = self.cleanup
         )
         locale.setlocale(locale.LC_ALL, self.config.setting["locale"]+".utf8")
 
         self.musicplayer = MusicPlayer(self.config.setting["mopidy_host"])
-        self.alarm = Alarm(self.config.setting["alarmtime"])
+        self.alarm = Alarm(self.config.setting["alarmtime"], self.config.setting["snooze"])
         self.alarm.alarm_active = False
         if self.config.setting["enabled"] == "1":
             self.alarm.enableAlarm()
@@ -144,7 +143,7 @@ class application:
             datetime.now().strftime(self.config.setting["timeformat"]))
 
         self.alarmscreen_cache["alarm_button"] = gui.Button(
-            self.ui.image_cache["alarm-symbolic.png"], icon_size, self.stop_alarm)
+            self.ui.image_cache["alarm-snooze.png"], icon_size, self.snooze_alarm)
         self.alarmscreen_cache["alarm_button"].Position = self.ui.calculate_position(
             (0, -55), self.alarmscreen_cache["alarm_button"].Surface, "center", "center")
 
@@ -414,6 +413,11 @@ class application:
             self.alarm_widget_cache["alarm_image_disabled_button"].Position = self.ui.calculate_position(
                 (1, 4), self.alarm_widget_cache["alarm_image_disabled_button"].Surface, "top", "left")
 
+            self.alarm_widget_cache["alarm_snooze_button"] = gui.Button(self.ui.image_cache[
+                "alarm-snooze.png"], icon_size, self.alarm.turnOffSnooze)
+            self.alarm_widget_cache["alarm_snooze_button"].Position = self.ui.calculate_position(
+                (1, 4), self.alarm_widget_cache["alarm_snooze_button"].Surface, "top", "left")
+
         self.alarm_widget_cache["time"] = str(self.alarm.alarmtime.strftime(
             self.config.setting["timeformat"])).upper()
         alarmfont_size = self.ui.calculate_font_size(4.5)
@@ -445,7 +449,10 @@ class application:
             self.cache_alarm_widget(updatetime=True)
 
         self.ui.elements.append(self.alarm_widget_cache["alarm_text_button"])
-        if self.alarm.enabled:
+        if self.alarm.snooze and not self.alarm.alarm_active:
+            self.ui.elements.append(self.alarm_widget_cache["alarm_snooze_button"])
+            self.ui.elements.append(self.alarm_widget_cache["alarm_edit_enabled_button"])
+        elif self.alarm.enabled:
             self.ui.elements.append(self.alarm_widget_cache["alarm_image_button"])
             self.ui.elements.append(self.alarm_widget_cache["alarm_edit_enabled_button"])
         else:
@@ -520,8 +527,7 @@ class application:
 
     def set_alarm(self):
         self.alarm.setAlarm()
-        self.config.setting["alarmtime"] = self.alarm.alarmtime.strftime(
-            "%H:%M")
+        self.config.setting["alarmtime"] = self.alarm.alarmtime.strftime("%H:%M")
         self.config.save()
         self.switch_to_defaultscreen(True)
 
@@ -535,9 +541,17 @@ class application:
         self.current_screen = self.clockscreen
         self.ui.redraw = True
 
+    def snooze_alarm(self):
+        self.alarm.alarm_active = False
+        self.player_primed = False
+        self.current_screen = self.clockscreen
+        self.alarm.turnOnSnooze()
+        self.ui.redraw = True
+
     def disable_alarm(self):
         self.alarm.disableAlarm()
         self.current_screen = self.clockscreen
+        self.alarm.turnOffSnooze()
         self.config.setting["enabled"] = "0"
         self.config.save()
         self.ui.redraw = True
@@ -551,6 +565,7 @@ class application:
 
     def alarm_triggered(self):
         self.current_screen == self.alarmscreen
+        self.alarm.alarm_active = True
         self.ui.redraw = True
         self.musicplayer.setAlarmPlaylist()
         if not self.musicplayer.playing:
