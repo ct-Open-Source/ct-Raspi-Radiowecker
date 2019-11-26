@@ -120,6 +120,8 @@ class application:
         self.alarmscreen_cache = {}
         icon_size = (
             self.ui.display_size[0] * .3, self.ui.display_size[1] * .3)
+        icon_size_awake = (
+            self.ui.display_size[0] * .2, self.ui.display_size[1] * .2)
         icon_size_enable = (
             self.ui.display_size[0] * .1, self.ui.display_size[1] * .1)
 
@@ -155,12 +157,17 @@ class application:
         self.alarmscreen_cache["alarm_edit_enabled_button"] = gui.Button(
             self.ui.image_cache["alarm-edit-enabled.png"], icon_size_enable, self.disable_alarm)
         self.alarmscreen_cache["alarm_edit_enabled_button"].Position = self.ui.calculate_position(
-            (0, 0), self.alarmscreen_cache["alarm_edit_enabled_button"].Surface, "top", "center")
+            (1, 4), self.alarmscreen_cache["alarm_edit_enabled_button"].Surface, "top", "left")
 
         self.alarmscreen_cache["alarm_edit_disabled_button"] = gui.Button(
             self.ui.image_cache["alarm-edit-disabled.png"], icon_size_enable, self.enable_alarm)
         self.alarmscreen_cache["alarm_edit_disabled_button"].Position = self.ui.calculate_position(
-            (0, 0), self.alarmscreen_cache["alarm_edit_disabled_button"].Surface, "top", "center")
+            (1, 4), self.alarmscreen_cache["alarm_edit_disabled_button"].Surface, "top", "left")
+
+        self.alarmscreen_cache["awake_button"] = gui.Button(
+            self.ui.image_cache["awake-symbolic.png"], icon_size_awake, self.awake)
+        self.alarmscreen_cache["awake_button"].Position = self.ui.calculate_position(
+            (1, -4), self.alarmscreen_cache["awake_button"].Surface, "top", "right")
 
         timefont_size = self.ui.calculate_font_size(25)
 
@@ -192,6 +199,7 @@ class application:
 
         self.ui.elements.append(self.alarmscreen_cache["background"])
         self.ui.elements.append(self.alarmscreen_cache["time_text_button"])
+        self.ui.elements.append(self.alarmscreen_cache["awake_button"])
         if self.alarm.enabled:
             self.ui.elements.append(self.alarmscreen_cache["alarm_button"])
             self.ui.elements.append(self.alarmscreen_cache["alarm_edit_enabled_button"])
@@ -546,6 +554,12 @@ class application:
         self.player_primed = False
         self.current_screen = self.clockscreen
         self.alarm.turnOnSnooze()
+        self.ui.redraw = True
+
+    def awake(self):
+        self.alarm.alarm_active = False
+        self.player_primed = False
+        self.current_screen = self.clockscreen()
         self.ui.redraw = True
 
     def disable_alarm(self):
