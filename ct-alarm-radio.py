@@ -26,7 +26,7 @@ class application:
         )
         locale.setlocale(locale.LC_ALL, self.config.setting["locale"]+".utf8")
 
-        self.musicplayer = MusicPlayer(self.config.setting["mopidy_host"])
+        self.musicplayer = MusicPlayer(self.config.setting["mopidy_host"], shuffle=self.config.setting["shuffle"])
         self.alarm = Alarm(self.config.setting["alarmtime"], self.config.setting["snooze"], self.musicplayer)
         self.alarm.alarm_active = False
         if self.config.setting["enabled"] == "1":

@@ -108,6 +108,9 @@ class MusicPlayer(object):
         self.getState()
 
     def play(self):
+        if self.shuffle:
+            method = "core.tracklist.shuffle"
+            self._clientRequest(method)
         method = "core.playback.play"
         self._clientRequest(method)
         self.getState()
