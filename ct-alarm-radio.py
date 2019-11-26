@@ -422,7 +422,7 @@ class application:
         self.alarm_widget_cache["alarm_text_button"] = gui.Button(
             alarm_text.Surface, alarm_text.Surface.get_size(), self.switch_to_alarmset_screen)
         self.alarm_widget_cache["alarm_text_button"].Position = (
-            self.alarm_widget_cache["alarm_image_button"].Position[0] + (icon_size[1]*1.1), self.alarm_widget_cache["alarm_image_button"].Position[1]*1.2)
+            self.alarm_widget_cache["alarm_image_button"].Position[0] + (icon_size[1]*1.1) + 20, self.alarm_widget_cache["alarm_image_button"].Position[1]*1.2)
 
         self.alarm_widget_cache["alarm_edit_enabled_button"] = gui.Button(
             self.ui.image_cache["alarm-edit-enabled.png"], icon_size_enable, self.disable_alarm)
