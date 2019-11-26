@@ -89,9 +89,11 @@ class MusicPlayer(object):
                 self.old_trackimages = trackimages
                 self.trackdata_changed = True
             self.artist = trackinfo["artists"][0]["name"].strip()
-
-            self.album = trackinfo["album"]["name"].strip()
             self.title = trackinfo["name"].strip()
+            try:
+                self.album = trackinfo["album"]["name"].strip()
+            except:
+                self.album = ""
             try:
                 self.imageurl = trackimages[trackinfo["uri"]][0]["uri"]
             except:
