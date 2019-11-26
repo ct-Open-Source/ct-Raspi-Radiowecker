@@ -24,6 +24,7 @@ class MusicPlayer(object):
     trackdata_changed = True
     old_trackimages = None
     old_trackinfo = None
+    playlist_set = False
 
     def __init__(self, hostname="127.0.0.1", port="6680", password="", shuffle=False):
         self.url = "http://"+hostname+":"+port+"/mopidy/rpc"
@@ -107,6 +108,8 @@ class MusicPlayer(object):
             self.album = ""
 
     def togglePlay(self):
+        if not self.playlist_set:
+            self.setAlarmPlaylist()
         if self.playing:
             method = "core.playback.pause"
         else:
@@ -115,6 +118,8 @@ class MusicPlayer(object):
         self.getState()
 
     def play(self):
+        if not self.playlist_set:
+            self.setAlarmPlaylist()
         if self.shuffle:
             method = "core.tracklist.shuffle"
             self._clientRequest(method)
@@ -172,6 +177,7 @@ class MusicPlayer(object):
             for track in alarm_tracks:
                 self._clientRequest(
                     "core.tracklist.add", {'uri': track["uri"]})
+            self.playlist_set = True
         except Exception as e:
             print(e)
 
