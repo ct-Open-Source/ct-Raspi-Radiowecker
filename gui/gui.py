@@ -33,6 +33,8 @@ class Gui:
         # correction factor for text elements
         # variables for resource files
         self.resource_path = "assets/"
+        # quit function
+        self.quit_function = quit_function
 
         self.wallpaper_path = "."
         self.show_wallpaper = True
@@ -212,7 +214,7 @@ class Gui:
 
         click = None
         timediff = pygame.time.get_ticks() - self.clicktime
-        if clicked and self.await_dblclk == False and self.click == None:
+        if clicked and self.await_dblclk == False and self.click is None:
             self.await_dblclk = True
             pass
         elif clicked and timediff < self.dblclktime and self.await_dblclk:

@@ -24,13 +24,19 @@ class MusicPlayer(object):
     trackdata_changed = True
     old_trackimages = None
     old_trackinfo = None
+    playlist_set = False
 
-    def __init__(self, hostname="127.0.0.1", port="6680", password=""):
+    def __init__(self, hostname="127.0.0.1", port="6680", password="", shuffle=False):
         self.url = "http://"+hostname+":"+port+"/mopidy/rpc"
+        if shuffle == "1":
+            self.shuffle = True
+        else:
+            self.shuffle = False
         # print(self.checkAlarmPlaylist())
         self.update_thread = threading.Thread(target=self.updateStatus)
         self.update_thread.daemon = True
         self.update_thread.start()
+
 
     def _downloader(self):
         if self._imageurl != None and self._imageurl not in self.image_cache:
@@ -84,9 +90,11 @@ class MusicPlayer(object):
                 self.old_trackimages = trackimages
                 self.trackdata_changed = True
             self.artist = trackinfo["artists"][0]["name"].strip()
-
-            self.album = trackinfo["album"]["name"].strip()
             self.title = trackinfo["name"].strip()
+            try:
+                self.album = trackinfo["album"]["name"].strip()
+            except:
+                self.album = ""
             try:
                 self.imageurl = trackimages[trackinfo["uri"]][0]["uri"]
             except:
@@ -100,6 +108,8 @@ class MusicPlayer(object):
             self.album = ""
 
     def togglePlay(self):
+        if not self.playlist_set:
+            self.setAlarmPlaylist()
         if self.playing:
             method = "core.playback.pause"
         else:
@@ -108,6 +118,11 @@ class MusicPlayer(object):
         self.getState()
 
     def play(self):
+        if not self.playlist_set:
+            self.setAlarmPlaylist()
+        if self.shuffle:
+            method = "core.tracklist.shuffle"
+            self._clientRequest(method)
         method = "core.playback.play"
         self._clientRequest(method)
         self.getState()
@@ -162,6 +177,7 @@ class MusicPlayer(object):
             for track in alarm_tracks:
                 self._clientRequest(
                     "core.tracklist.add", {'uri': track["uri"]})
+            self.playlist_set = True
         except Exception as e:
             print(e)
 
