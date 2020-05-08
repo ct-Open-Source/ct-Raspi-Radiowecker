@@ -121,26 +121,26 @@ class MusicPlayer(object):
     def getVolume(self):
         try:
             self.volume = int(self._clientRequest(
-                "core.playback.get_volume")["result"])
+                "core.mixer.get_volume")["result"])
             self.muted = bool(self._clientRequest(
-                "core.playback.get_mute")["result"])
+                "core.mixer.get_mute")["result"])
         except Exception as e:
             print(e)
             self.volume = 100
             self.muted = False
 
     def toggleMute(self):
-        self._clientRequest("core.playback.set_mute", {"mute": not self.muted})
+        self._clientRequest("core.mixer.set_mute", {"mute": not self.muted})
         self.muted = bool(self._clientRequest(
-            "core.playback.get_mute")["result"])
+            "core.mixer.get_mute")["result"])
 
     def volup(self):
-        self._clientRequest("core.playback.set_volume", {
+        self._clientRequest("core.mixer.set_volume", {
                             "volume": self.volume + 10})
         self.getVolume()
 
     def voldown(self):
-        self._clientRequest("core.playback.set_volume", {
+        self._clientRequest("core.mixer.set_volume", {
                             "volume": self.volume - 10})
         self.getVolume()
 

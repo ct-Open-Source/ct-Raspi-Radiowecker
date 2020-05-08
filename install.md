@@ -28,7 +28,7 @@ sudo ./LCD5-show
 ## Mopidy-Addons nachinstallieren
 
 ```
-sudo pip install Mopidy-Iris Mopidy-ALSAMixer 
+sudo python3 -m pip install Mopidy-Mobile Mopidy-ALSAMixer 
 ```
 
 ## Python-Umgebung für das Touch-Interface einrichten
