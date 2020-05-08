@@ -20,7 +20,7 @@ wget https://github.com/waveshare/LCD-show/archive/master.zip
 
 unzip master.zip
 
-cd LCD-Show
+cd LCD-Show-master
 
 sudo ./LCD5-show
 ```
